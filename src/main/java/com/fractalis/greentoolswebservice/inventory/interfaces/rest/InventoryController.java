@@ -36,13 +36,7 @@ public class InventoryController {
     private final InventoryQueryService inventoryQueryService;
     private final UserQueryService userQueryService;
 
-    /**
-     * Constructor
-     *
-     * @param inventoryCommandService The {@link InventoryCommandService} service
-     * @param inventoryQueryService The {@link InventoryQueryService} service
-     * @param userQueryService The {@link UserQueryService} service
-     */
+
     @Autowired
     public InventoryController(InventoryCommandService inventoryCommandService, InventoryQueryService inventoryQueryService, UserQueryService userQueryService) {
         this.inventoryCommandService = inventoryCommandService;
