@@ -107,12 +107,7 @@ public class PlantController {
         return new ResponseEntity<>(plantResource, HttpStatus.CREATED);
     }
 
-    /**
-     * Delete a plant
-     *
-     * @param plantId The plant id
-     * @return The object {@link HttpStatus} status
-     */
+
     @Operation(summary = "Delete plant by station id")
     @Parameters({@Parameter(name = "plantId", description = "Plant id", required = true)})
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Plants deleted")})
