@@ -12,7 +12,7 @@ import java.util.List;
 
 @Configuration
 public class OpenApiConfiguration {
-    @Bean
+    @Bean 
     public OpenAPI FractilesEdgePlatformOpenApi() {
         var openApi = new OpenAPI();
 
