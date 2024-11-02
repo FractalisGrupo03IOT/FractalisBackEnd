@@ -15,11 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class CropDataController {
-    private CropDataCommandService cropDataCommandService;
-    private CropDataQueryService cropDataQueryService;
+    private final CropDataCommandService cropDataCommandService;
+    private final CropDataQueryService cropDataQueryService;
 
     @Autowired
     public CropDataController(CropDataCommandService cropDataCommandService, CropDataQueryService cropDataQueryService){
