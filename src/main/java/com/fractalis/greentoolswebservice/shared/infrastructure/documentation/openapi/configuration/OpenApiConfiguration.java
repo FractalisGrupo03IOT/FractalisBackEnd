@@ -14,7 +14,7 @@ import java.util.List;
 public class OpenApiConfiguration {
     @Bean 
     public OpenAPI FractilesEdgePlatformOpenApi() {
-        var openApi = new OpenAPI();
+        var openApi = new OpenAPI(); 
 
         openApi
                 .info(new Info()
