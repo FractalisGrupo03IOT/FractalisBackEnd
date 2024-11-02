@@ -42,7 +42,7 @@ public class PlantController {
         this.plantCommandService = plantCommandService;
         this.plantQueryService = plantQueryService;
     }
-
+ 
     /**
      * Get a plant by its id
      *
