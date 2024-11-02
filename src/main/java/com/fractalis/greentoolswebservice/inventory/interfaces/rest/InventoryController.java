@@ -9,6 +9,12 @@ import com.fractalis.greentoolswebservice.inventory.domain.services.InventoryQue
 import com.fractalis.greentoolswebservice.inventory.interfaces.rest.resources.CreateInventoryResource;
 import com.fractalis.greentoolswebservice.inventory.interfaces.rest.resources.InventoryResource;
 import com.fractalis.greentoolswebservice.inventory.interfaces.rest.transform.CreateInventoryResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +24,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @CrossOrigin(origins = "**", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(value = "/api/v1", produces = APPLICATION_JSON_VALUE)
+@Tag(name = "Stations", description = "All station related endpoints")
 public class InventoryController {
 
     private final InventoryCommandService inventoryCommandService;
     private final InventoryQueryService inventoryQueryService;
     private final UserQueryService userQueryService;
 
+    /**
+     * Constructor
+     *
+     * @param inventoryCommandService The {@link InventoryCommandService} service
+     * @param inventoryQueryService The {@link InventoryQueryService} service
+     * @param userQueryService The {@link UserQueryService} service
+     */
     @Autowired
     public InventoryController(InventoryCommandService inventoryCommandService, InventoryQueryService inventoryQueryService, UserQueryService userQueryService) {
         this.inventoryCommandService = inventoryCommandService;
@@ -34,6 +50,13 @@ public class InventoryController {
         this.userQueryService = userQueryService;
     }
 
+    /**
+     * Get all the stations
+     *
+     * @return The list of {@link InventoryResource} stations
+     */
+    @Operation(summary = "Get all stations")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Stations founded")})
     @GetMapping("/stations")
     public ResponseEntity<List<InventoryResource>> getAllInventories() {
         List<Inventory> inventories = inventoryQueryService.getAllInventories();
@@ -43,6 +66,15 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryResources, HttpStatus.OK);
     }
 
+    /**
+     * Get a station by id
+     *
+     * @param id The user id
+     * @return The object {@link InventoryResource} station
+     */
+    @Operation(summary = "Get station by id")
+    @Parameters({@Parameter(name = "id", description = "Plant id", required = true)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Station founded")})
     @GetMapping("/station/{id}")
     public ResponseEntity<InventoryResource> getInventoryById(@PathVariable Long id) {
         Optional<Inventory> inventory = inventoryQueryService.getInventoryById(id);
@@ -50,6 +82,15 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryResource, HttpStatus.OK);
     }
 
+    /**
+     * Get a list of stations by user id
+     *
+     * @param userId The user id
+     * @return The list of {@link InventoryResource} stations
+     */
+    @Operation(summary = "Get stations by user id")
+    @Parameters({@Parameter(name = "userId", description = "User id", required = true)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Stations founded")})
     @GetMapping("/stations/userId/{userId}")
     public ResponseEntity<List<InventoryResource>> getInventoryByUserId(@PathVariable Long userId) {
         List<Inventory> inventories = inventoryQueryService.getInventoryByUserId(userId);
@@ -59,6 +100,15 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryResources, HttpStatus.OK);
     }
 
+    /**
+     * Create a station
+     *
+     * @param inventoryRequest Inventory body
+     * @return The just created {@link Inventory} station
+     */
+    @Operation(summary = "Create a station")
+    @Parameters({@Parameter(name = "inventoryRequest", description = "Station body", required = true)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Station created")})
     @PostMapping("/station")
     public ResponseEntity<Inventory> createInventory(@RequestBody CreateInventoryResource inventoryRequest) {
         Optional<User> user = userQueryService.getUserById(inventoryRequest.userId());
@@ -76,7 +126,22 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Update a station
+     *
+     * @param id The station id
+     * @param stationName The station name
+     * @param description The station description
+     * @param stationImage The station image
+     * @return The object {@link HttpStatus} status
+     */
     // PUT: Actualizar un inventario existente
+    @Operation(summary = "Update a station")
+    @Parameters({@Parameter(name = "inventoryId", description = "Station id", required = true),
+                 @Parameter(name = "stationName", description = "Station name", required = true),
+                 @Parameter(name = "description", description = "Station description", required = true),
+                 @Parameter(name = "stationImage", description = "Station image", required = true)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Station updated")})
     @PutMapping("/station/{id}")
     public ResponseEntity<Void> updateInventory(@PathVariable Long id,
                                                 @RequestParam String stationName,
@@ -90,7 +155,15 @@ public class InventoryController {
         }
     }
 
-    // DELETE: Eliminar un inventario por su ID
+    /**
+     * Delete a station
+     *
+     * @param id The station id
+     * @return The object {@link HttpStatus} status
+     */
+    @Operation(summary = "Delete a station")
+    @Parameters({@Parameter(name = "inventoryId", description = "Station id", required = true)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Station deleted")})
     @DeleteMapping("/station/{id}")
     public ResponseEntity<Void> deleteInventory(@PathVariable Long id) {
         try {
