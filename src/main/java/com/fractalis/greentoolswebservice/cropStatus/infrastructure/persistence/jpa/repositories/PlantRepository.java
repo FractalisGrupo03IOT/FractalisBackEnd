@@ -2,7 +2,7 @@ package com.fractalis.greentoolswebservice.cropStatus.infrastructure.persistence
 
 import com.fractalis.greentoolswebservice.cropStatus.domain.model.aggregates.Plant;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Repository; 
  
 import java.util.List;
 
