@@ -42,7 +42,7 @@ public class PlantController {
         this.plantCommandService = plantCommandService;
         this.plantQueryService = plantQueryService;
     }
-
+ 
     /**
      * Get a plant by its id
      *
@@ -106,7 +106,7 @@ public class PlantController {
         PlantResource plantResource = CreatePlantResourceFromEntityAssembler.toResourceFromEntity(plant);
         return new ResponseEntity<>(plantResource, HttpStatus.CREATED);
     }
-
+   
     /**
      * Delete a plant
      *

@@ -43,6 +43,7 @@ public class InventoryController {
      * @param inventoryQueryService The {@link InventoryQueryService} service
      * @param userQueryService The {@link UserQueryService} service
      */
+
     @Autowired
     public InventoryController(InventoryCommandService inventoryCommandService, InventoryQueryService inventoryQueryService, UserQueryService userQueryService) {
         this.inventoryCommandService = inventoryCommandService;
