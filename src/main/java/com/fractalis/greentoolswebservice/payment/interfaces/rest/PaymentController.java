@@ -7,8 +7,6 @@ import com.fractalis.greentoolswebservice.payment.domain.model.valueobjects.Date
 import com.fractalis.greentoolswebservice.payment.domain.services.PaymentCommandService;
 import com.fractalis.greentoolswebservice.payment.domain.services.PaymentQueryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -69,8 +67,7 @@ public class PaymentController {
     @Operation(summary = "Get a payment by its id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Payment founded")})
     @GetMapping("/payments/{id}")
-    public ResponseEntity<Payment> getPaymentById(
-            @Parameter(name = "paymentId", description = "Payment id", required = true) @PathVariable Long id) {
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
         Optional<Payment> payment = paymentQueryService.getPaymentById(id);
         return payment.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -86,9 +83,7 @@ public class PaymentController {
     @Operation(summary = "Create a payment")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Payment created")})
     @PostMapping("/payment")
-    public ResponseEntity<Payment> createPayment(
-            @RequestBody @Schema(description = "Payment body") Payment paymentRequest,
-            @Parameter(name = "userId", description = "User id", required = true) @RequestParam Long userId) {
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment paymentRequest, @RequestParam Long userId) {
         Optional<User> user = userQueryService.getUserById(userId);
 
         if(user.isPresent()) {
@@ -114,8 +109,7 @@ public class PaymentController {
     @Operation(summary = "Delete a payment")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Payment deleted")})
     @DeleteMapping("/payment/{id}")
-    public ResponseEntity<Void> deletePayment(
-            @Parameter(name = "paymentId", description = "Payment id", required = true) @PathVariable Long id) {
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
         paymentCommandService.deletePayment(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

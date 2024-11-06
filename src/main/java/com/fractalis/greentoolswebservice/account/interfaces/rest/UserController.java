@@ -4,8 +4,6 @@ import com.fractalis.greentoolswebservice.account.domain.model.aggregates.User;
 import com.fractalis.greentoolswebservice.account.domain.services.UserCommandService;
 import com.fractalis.greentoolswebservice.account.domain.services.UserQueryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,10 +60,7 @@ public class UserController {
     @Operation(summary = "Get user by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User found")})
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(
-
-            @Parameter(name = "userId", description = "User id", required = true) @PathVariable Long id) {
-
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userQueryService.getUserById(id);
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -80,8 +75,7 @@ public class UserController {
     @Operation(summary = "Create user")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "User created")})
     @PostMapping("/user")
-    public ResponseEntity<User> createUser(
-            @RequestBody @Schema(description = "User info") User userRequest) {
+    public ResponseEntity<User> createUser(@RequestBody User userRequest) {
         User user = userCommandService.createUser(
                 userRequest.getName().firstName(),
                 userRequest.getName().lastName(),
@@ -106,9 +100,7 @@ public class UserController {
     @Operation(summary = "Update user by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User updated")})
     @PutMapping("/user/{id}")
-    public ResponseEntity<User> updateUser(
-            @Parameter(name = "userId", description = "User id", required = true) @PathVariable Long id,
-            @RequestBody @Schema(description = "User body") User userRequest) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userRequest) {
         Optional<User> existingUser = userQueryService.getUserById(id);
         if (existingUser.isPresent()) {
             User updatedUser = userCommandService.updateUser(
@@ -137,8 +129,7 @@ public class UserController {
     @Operation(summary = "Delete user by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User deleted")})
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<Void> deleteUser(
-            @Parameter(name = "userId", description = "User id", required = true) @PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         Optional<User> existingUser = userQueryService.getUserById(id);
         if (existingUser.isPresent()) {
             userCommandService.deleteUser(id);

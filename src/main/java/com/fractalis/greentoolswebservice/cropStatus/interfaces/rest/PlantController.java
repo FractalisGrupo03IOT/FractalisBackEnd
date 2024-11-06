@@ -7,8 +7,6 @@ import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.resources.C
 import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.resources.PlantResource;
 import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.transform.CreatePlantResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,8 +50,7 @@ public class PlantController {
     @Operation(summary = "Get a plant by its id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Plant founded")})
     @GetMapping("/plant/{plantId}")
-    public ResponseEntity<PlantResource> getPlantById(
-            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId){
+    public ResponseEntity<PlantResource> getPlantById(@PathVariable Long plantId){
         Optional<Plant> plant = this.plantQueryService.getPlantById(plantId);
         PlantResource plantResource = CreatePlantResourceFromEntityAssembler.toResourceFromEntity(plant.get());
         return new ResponseEntity<>(plantResource, HttpStatus.OK);
@@ -68,8 +65,7 @@ public class PlantController {
     @Operation(summary = "Get plants by station id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Plants founded")})
     @GetMapping("/plants/{stationId}")
-    public ResponseEntity<List<PlantResource>> getPlantsByStationId(
-            @Parameter(name = "stationId", description = "Station id", required = true) @PathVariable Long stationId){
+    public ResponseEntity<List<PlantResource>> getPlantsByStationId(@PathVariable Long stationId){
         List<Plant> plants = this.plantQueryService.getPlantsByStationId(stationId);
         List<PlantResource> plantResources = plants.stream().map(
                 CreatePlantResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
@@ -101,7 +97,7 @@ public class PlantController {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Plant created")})
     @PostMapping("/plant")
     public ResponseEntity<PlantResource> createUser(
-            @RequestBody @Schema(description = "Plant body") CreatePlantResource plantRequest) {
+            @RequestBody CreatePlantResource plantRequest) {
         Plant plant = this.plantCommandService.createPlant(plantRequest.stationId(), plantRequest.name(), plantRequest.plantImage());
         PlantResource plantResource = CreatePlantResourceFromEntityAssembler.toResourceFromEntity(plant);
         return new ResponseEntity<>(plantResource, HttpStatus.CREATED);
@@ -116,8 +112,7 @@ public class PlantController {
     @Operation(summary = "Delete plant by station id")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Plants deleted")})
     @DeleteMapping("/plant/{plantId}")
-    public ResponseEntity<Void> deletePlant(
-            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId) {
+    public ResponseEntity<Void> deletePlant(@PathVariable Long plantId) {
         Optional<Plant> existingPlant = this.plantQueryService.getPlantById(plantId);
         if (existingPlant.isPresent()) {
             plantCommandService.deletePlant(plantId);

@@ -7,8 +7,6 @@ import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.resources.C
 import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.resources.CropDataResource;
 import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.transform.CreateCropDataResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,7 +50,7 @@ public class CropDataController {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Crop data created")})
     @PostMapping("/cropData")
     public ResponseEntity<CropDataResource> createCropData(
-            @RequestBody @Schema(description = "Crop sensors data") CreateCropDataResource cropDataResource){
+            @RequestBody CreateCropDataResource cropDataResource){
         CropData cropData = this.cropDataCommandService.createCropData(cropDataResource.plantId(), cropDataResource.humidity(), cropDataResource.temperature(), cropDataResource.uv());
         CropDataResource dataResource = CreateCropDataResourceFromEntityAssembler.toResourceFromEntity(cropData);
         return new ResponseEntity<>(dataResource, HttpStatus.CREATED);
@@ -67,8 +65,7 @@ public class CropDataController {
     @Operation(summary = "Get crop data list by plant id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Crop data founded")})
     @GetMapping("/cropData/{plantId}")
-    public ResponseEntity<List<CropDataResource>> getCropDataByStationId(
-            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId){
+    public ResponseEntity<List<CropDataResource>> getCropDataByStationId(@PathVariable Long plantId){
         List<CropData> cropDataList = this.cropDataQueryService.getCropDataByStationId(plantId);
         List<CropDataResource> cropDataResourceList = cropDataList.stream().map(
                 CreateCropDataResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
@@ -84,8 +81,7 @@ public class CropDataController {
     @Operation(summary = "Get last month crop data list by plant id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Crop data founded")})
     @GetMapping("/lastMonthCropData/{plantId}")
-    public ResponseEntity<List<CropDataResource>> getLastMonthCropDataByStationId(
-            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId){
+    public ResponseEntity<List<CropDataResource>> getLastMonthCropDataByStationId(@PathVariable Long plantId){
         List<CropData> cropDataList = this.cropDataQueryService.getLastMonthCropDataByStationId(plantId);
         List<CropDataResource> cropDataResourceList = cropDataList.stream().map(
                 CreateCropDataResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
