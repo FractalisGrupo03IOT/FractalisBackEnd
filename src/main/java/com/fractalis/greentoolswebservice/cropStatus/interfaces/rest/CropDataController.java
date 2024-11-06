@@ -8,7 +8,7 @@ import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.resources.C
 import com.fractalis.greentoolswebservice.cropStatus.interfaces.rest.transform.CreateCropDataResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,10 +49,10 @@ public class CropDataController {
      * @return The just created {@link CropDataResource} crop data resource
      */
     @Operation(summary = "Create crop data")
-    @Parameters({@Parameter(name = "crop data", description = "Crop data body", required = true)})
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Crop data created")})
     @PostMapping("/cropData")
-    public ResponseEntity<CropDataResource> createCropData(@RequestBody CreateCropDataResource cropDataResource){
+    public ResponseEntity<CropDataResource> createCropData(
+            @RequestBody @Schema(description = "Crop sensors data") CreateCropDataResource cropDataResource){
         CropData cropData = this.cropDataCommandService.createCropData(cropDataResource.plantId(), cropDataResource.humidity(), cropDataResource.temperature(), cropDataResource.uv());
         CropDataResource dataResource = CreateCropDataResourceFromEntityAssembler.toResourceFromEntity(cropData);
         return new ResponseEntity<>(dataResource, HttpStatus.CREATED);
@@ -65,13 +65,13 @@ public class CropDataController {
      * @return The list of {@link CropDataResource} crop data resources
      */
     @Operation(summary = "Get crop data list by plant id")
-    @Parameters(@Parameter(name = "plantId", description = "Plant id", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Crop data founded")})
     @GetMapping("/cropData/{plantId}")
-    public ResponseEntity<List<CropDataResource>> getCropDataByStationId(@PathVariable Long plantId){
+    public ResponseEntity<List<CropDataResource>> getCropDataByStationId(
+            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId){
         List<CropData> cropDataList = this.cropDataQueryService.getCropDataByStationId(plantId);
-        List<CropDataResource> cropDataResourceList = cropDataList.stream().map(cropData ->
-                CreateCropDataResourceFromEntityAssembler.toResourceFromEntity(cropData)).collect(Collectors.toList());
+        List<CropDataResource> cropDataResourceList = cropDataList.stream().map(
+                CreateCropDataResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
         return new ResponseEntity<>(cropDataResourceList, HttpStatus.OK);
     }
 
@@ -82,13 +82,13 @@ public class CropDataController {
      * @return The list of {@link CropDataResource} crop data resources
      */
     @Operation(summary = "Get last month crop data list by plant id")
-    @Parameters(@Parameter(name = "plantId", description = "Plant id", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Crop data founded")})
     @GetMapping("/lastMonthCropData/{plantId}")
-    public ResponseEntity<List<CropDataResource>> getLastMonthCropDataByStationId(@PathVariable Long plantId){
+    public ResponseEntity<List<CropDataResource>> getLastMonthCropDataByStationId(
+            @Parameter(name = "plantId", description = "Plant id", required = true) @PathVariable Long plantId){
         List<CropData> cropDataList = this.cropDataQueryService.getLastMonthCropDataByStationId(plantId);
-        List<CropDataResource> cropDataResourceList = cropDataList.stream().map(cropData ->
-                CreateCropDataResourceFromEntityAssembler.toResourceFromEntity(cropData)).collect(Collectors.toList());
+        List<CropDataResource> cropDataResourceList = cropDataList.stream().map(
+                CreateCropDataResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
         return new ResponseEntity<>(cropDataResourceList, HttpStatus.OK);
     }
 }
