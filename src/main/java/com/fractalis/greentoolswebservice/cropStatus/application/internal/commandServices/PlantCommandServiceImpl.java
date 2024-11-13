@@ -24,7 +24,7 @@ public class PlantCommandServiceImpl implements PlantCommandService {
     }
     @Override
     public Plant createPlant(Long stationId, String name, String plantImage) {
-        String url = "https://fractalisbackend-production.up.railway.app/api/v1/cropData";
+        String url = "https://fractalies-edge-server-production.up.railway.app/api/v1/crop/links";
         RestTemplate restTemplate = new RestTemplate();
 
         Plant plant = new Plant(stationId, name, plantImage);
