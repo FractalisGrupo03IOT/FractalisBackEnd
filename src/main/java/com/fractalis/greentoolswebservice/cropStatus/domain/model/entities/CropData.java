@@ -42,7 +42,7 @@ public class CropData {
     }
 
     public String getFormattedDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Solo día, mes y año
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         return sdf.format(dataDate);
     }
 }
