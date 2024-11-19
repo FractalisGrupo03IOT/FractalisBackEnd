@@ -78,10 +78,10 @@ public class CropDataController {
      * @param plantId The plant id
      * @return The list of {@link CropDataResource} crop data resources
      */
-    @Operation(summary = "Get last month crop data list by plant id")
+    @Operation(summary = "Get last day crop data list by plant id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Crop data founded")})
     @GetMapping("/lastMonthCropData/{plantId}")
-    public ResponseEntity<List<CropDataResource>> getLastMonthCropDataByStationId(@PathVariable Long plantId){
+    public ResponseEntity<List<CropDataResource>> getLastDayDataByStationId(@PathVariable Long plantId){
         List<CropData> cropDataList = this.cropDataQueryService.getLastMonthCropDataByStationId(plantId);
         List<CropDataResource> cropDataResourceList = cropDataList.stream().map(
                 CreateCropDataResourceFromEntityAssembler::toResourceFromEntity).collect(Collectors.toList());
