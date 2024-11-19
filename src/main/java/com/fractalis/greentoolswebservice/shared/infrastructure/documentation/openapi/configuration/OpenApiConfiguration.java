@@ -28,7 +28,7 @@ public class OpenApiConfiguration {
                         .description("Fractalies")
                         .url(""));
 
-        openApi.servers(List.of(new Server().url("https://fractalisbackend-production-7508.up.railway.app")));
+        openApi.servers(List.of(new Server().url("https://fractalisbackend-production.up.railway.app")));
         return openApi;
     }
 }
